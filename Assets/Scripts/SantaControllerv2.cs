@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 
-public class SantaController : MonoBehaviour
+public class SantaControllerv2 : MonoBehaviour
 {
 	[Header("Setup")]
 	[SerializeField]
@@ -25,9 +25,8 @@ public class SantaController : MonoBehaviour
 	private float _targetX = 0f;
 	private float _targetY = 0f;
 
-	// Current values for x and y parameters
-	private float _currentX = 0f;
-	private float _currentY = 0f;
+	// Current value
+	private float _currentSpeed = 0f;
 
 	private bool _canJump, _firstTimeJumping, _jump;
 
@@ -81,25 +80,21 @@ public class SantaController : MonoBehaviour
 		else if (Input.GetKey(KeyCode.D))
 			_targetX = isRunning ? 1f : 0.5f;
 
-		// Smoothly transition current values towards target values
-		_currentX = Mathf.Lerp(_currentX, _targetX, currentSmoothing);
-		_currentY = Mathf.Lerp(_currentY, _targetY, currentSmoothing);
-
-		if (Mathf.Abs(_currentX) < 0.001f)
-			_currentX = 0f;
-
-		if (Mathf.Abs(_currentY) < 0.001f)
-			_currentY = 0f;
+		// Smoothly transition current value towards target value
+		float targetSpeed = Mathf.Max(Mathf.Abs(_targetX), Mathf.Abs(_targetY));
+		_currentSpeed = Mathf.Lerp(_currentSpeed, targetSpeed, currentSmoothing);
+		
+		if (_currentSpeed < 0.001f)
+			_currentSpeed = 0f;
 
 		// Update animator parameters
-		_animator.SetFloat("InputX", _currentX);
-		_animator.SetFloat("InputY", _currentY);
+		_animator.SetFloat("Speed", _currentSpeed);
 	}
 
 	private void HandleMovement(bool isRunning)
 	{
 		Vector3 moveDir = new Vector3(_targetX, 0f, _targetY);
-
+		
 		if (moveDir.magnitude < 0.01f) return;
 
 		float speedMultiplier = isRunning ? 1f : 0.5f;
@@ -107,12 +102,9 @@ public class SantaController : MonoBehaviour
 
 		transform.Translate(velocity * Time.deltaTime, Space.World);
 
-		if (!_canJump)
-		{
-			// Smooth rotation when jumping + moving
-			Quaternion targetRotation = Quaternion.LookRotation(moveDir.normalized, Vector3.up);
-			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
-		}
+		// Smooth rotation
+		Quaternion targetRotation = Quaternion.LookRotation(moveDir.normalized, Vector3.up);
+		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
 	}
 
 	private void CheckJump()
@@ -139,7 +131,6 @@ public class SantaController : MonoBehaviour
 		{
 			_canJump = true;
 			_animator.SetBool("Grounded", true);
-			transform.rotation = Quaternion.Euler(0f, 0f, 0f);
 			if (!_firstTimeJumping)
 				_lastLandTime = Time.time;
 			else

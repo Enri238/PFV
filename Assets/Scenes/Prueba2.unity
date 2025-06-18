@@ -534,11 +534,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2011198436 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 784052080468965811, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
+  m_PrefabInstance: {fileID: 2836049609426671073}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2011198441 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8575705848801196052, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
   m_PrefabInstance: {fileID: 2836049609426671073}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2011198442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2011198436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48863ce4b8c139741aa1f624a4e05f0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _smoothing: 0.06
+  _runningSmoothing: 0.08
+  _moveSpeed: 5
+  _jumpForce: 5
+  _jumpCooldown: 0.5
 --- !u!1001 &2836049609426671073
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -551,6 +573,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: SantaClaus
       objectReference: {fileID: 0}
+    - target: {fileID: 1582792900098052574, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1654546265882861020, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 37ceb4cff69593b499333aae6191fa2b, type: 2}
     - target: {fileID: 8575705848801196052, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.0801754
@@ -591,10 +621,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1582792900098052574, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 784052080468965811, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2011198442}
   m_SourcePrefab: {fileID: 100100000, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
