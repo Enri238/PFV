@@ -255,7 +255,7 @@ public class SantaControllerv2 : MonoBehaviour
 	{
 		if (_boostJump)
 		{
-			_rb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+			_rb.AddForce(_jumpForce * 2 * Vector3.up, ForceMode.Impulse);
 			_boostJump = false;
 		}
 	}
