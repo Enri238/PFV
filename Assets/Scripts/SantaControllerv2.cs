@@ -1,22 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 
 public class SantaControllerv2 : MonoBehaviour
 {
 	[Header("Setup")]
-	[SerializeField]
-	private float _smoothing = 0.06f; // Smoothing factor for transitions
-	[SerializeField]
-	private float _runningSmoothing = 0.08f; // Smoothing factor for running transitions
-	[SerializeField]
-	private float _moveSpeed = 5f;
-	[SerializeField]
-	private float _jumpForce = 5f;
-	[SerializeField]
-	private float _jumpCooldown = 0.5f;
+	[SerializeField] private float _smoothing = 0.06f; // Smoothing factor for transitions
+	[SerializeField] private float _runningSmoothing = 0.08f; // Smoothing factor for running transitions
+	[SerializeField] private float _defaultMoveSpeed = 5f;
+	[SerializeField] private float _defaultJumpForce = 5f;
+	[SerializeField] private float _jumpCooldown = 0.5f;
+	[SerializeField] private float _groundCheckDistance = 0.3f;
+	[SerializeField] private bool _acceleratedIceJump;
 
 	private Animator _animator;
 	private Rigidbody _rb;
@@ -28,42 +23,71 @@ public class SantaControllerv2 : MonoBehaviour
 	// Current value
 	private float _currentSpeed = 0f;
 
-	private bool _canJump, _firstTimeJumping, _jump;
+	private bool _canJump = true;
+	private bool _jump = false;
+	private bool _boostJump = false;
+	private bool _onIce = false;
 
 	private float _lastLandTime = -Mathf.Infinity;
+	private float _moveSpeed, _jumpForce;
 
 	void Awake()
 	{
 		_animator = GetComponent<Animator>();
 		_rb = GetComponent<Rigidbody>();
-		_canJump = true;
-		_firstTimeJumping = true;
-		_jump = false;
+
+		_moveSpeed = _defaultMoveSpeed;
+		_jumpForce = _defaultJumpForce;
 	}
 
 	void Update()
 	{
-		bool isRunning = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-
-		float currentSmoothing = isRunning ? _runningSmoothing : _smoothing;
+		bool isRunning = IsRunning();
 
 		// Handle animations
-		HandleMovementAnimations(isRunning, currentSmoothing);
+		UpdateMovementTargets(isRunning);
+		UpdateAnimations(isRunning);
+
+		// Check if the player is grounded
+		CheckGrounded();
 
 		// Check if jump requested
 		CheckJump();
 
-		// Handle movement
-		HandleMovement(isRunning);
+		Vector3 moveDirection = new Vector3(_targetX, 0f, _targetY);
+		// Handle movement if not on ice
+		if (!_onIce)
+			HandleMovement(isRunning, moveDirection);
+
+		// Apply smooth rotation towards movement direction
+		ApplySmoothRotation(moveDirection);
 	}
 
 	void FixedUpdate()
 	{
+		bool isRunning = IsRunning();
+
 		// Handle jumping
 		HandleJumping();
+
+		// Boost jump
+		CheckBoostJump();
+
+		// Handle movement when on ice
+		if (_onIce)
+			ApplyIceForces(isRunning);
 	}
 
-	private void HandleMovementAnimations(bool isRunning, float currentSmoothing)
+	// ---------------------------------------------
+	// Animaciones y movimiento
+	// ---------------------------------------------
+
+	private bool IsRunning()
+	{
+		return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+	}
+
+	private void UpdateMovementTargets(bool isRunning)
 	{
 		// Reset target values
 		_targetX = 0f;
@@ -79,11 +103,16 @@ public class SantaControllerv2 : MonoBehaviour
 			_targetX = isRunning ? -1f : -0.5f;
 		else if (Input.GetKey(KeyCode.D))
 			_targetX = isRunning ? 1f : 0.5f;
+	}
+
+	private void UpdateAnimations(bool isRunning)
+	{
+		float currentSmoothing = isRunning ? _runningSmoothing : _smoothing;
 
 		// Smoothly transition current value towards target value
 		float targetSpeed = Mathf.Max(Mathf.Abs(_targetX), Mathf.Abs(_targetY));
 		_currentSpeed = Mathf.Lerp(_currentSpeed, targetSpeed, currentSmoothing);
-		
+
 		if (_currentSpeed < 0.001f)
 			_currentSpeed = 0f;
 
@@ -91,21 +120,37 @@ public class SantaControllerv2 : MonoBehaviour
 		_animator.SetFloat("Speed", _currentSpeed);
 	}
 
-	private void HandleMovement(bool isRunning)
+	private void HandleMovement(bool isRunning, Vector3 moveDirection)
 	{
-		Vector3 moveDir = new Vector3(_targetX, 0f, _targetY);
-		
-		if (moveDir.magnitude < 0.01f) return;
+		if (moveDirection.magnitude < 0.01f) return;
 
 		float speedMultiplier = isRunning ? 1f : 0.5f;
-		Vector3 velocity = _moveSpeed * speedMultiplier * moveDir.normalized;
+		Vector3 velocity = _moveSpeed * speedMultiplier * moveDirection.normalized;
 
 		transform.Translate(velocity * Time.deltaTime, Space.World);
+	}
+
+	private void ApplySmoothRotation(Vector3 moveDirection)
+	{
+		if (moveDirection.magnitude < 0.01f) return;
 
 		// Smooth rotation
-		Quaternion targetRotation = Quaternion.LookRotation(moveDir.normalized, Vector3.up);
+		Quaternion targetRotation = Quaternion.LookRotation(moveDirection.normalized, Vector3.up);
 		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
 	}
+	
+	private void ApplyIceForces(bool isRunning)
+	{
+		float forceMultiplier = isRunning ? 1f : 0.5f;
+		float forceAmount = forceMultiplier * 10f * Time.fixedDeltaTime;
+
+		if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+			_rb.AddForce(forceAmount * transform.forward, ForceMode.VelocityChange);
+	}
+
+	// ---------------------------------------------
+	// Salto
+	// ---------------------------------------------
 
 	private void CheckJump()
 	{
@@ -125,26 +170,93 @@ public class SantaControllerv2 : MonoBehaviour
 		}
 	}
 
-	private void OnCollisionEnter(Collision collision)
+	// ---------------------------------------------
+	// Ground check
+	// ---------------------------------------------
+
+	private void CheckGrounded()
 	{
-		if (collision.gameObject.CompareTag("Ground"))
+		Vector3 origin = transform.position + 0.1f * Vector3.up;
+		float offset = 0.2f;
+		bool isGroundedNow = IsGroundedRaycasts(origin, offset);
+
+		if (isGroundedNow && !_canJump)
+			OnLand();
+		else if (!isGroundedNow && _canJump)
+			InTheAir();
+	}
+
+	private bool IsGroundedRaycasts(Vector3 origin, float offset)
+	{
+		return Physics.Raycast(origin, Vector3.down, _groundCheckDistance) ||
+			   Physics.Raycast(origin + offset * Vector3.forward, Vector3.down, _groundCheckDistance) ||
+			   Physics.Raycast(origin + offset * Vector3.right, Vector3.down, _groundCheckDistance) ||
+			   Physics.Raycast(origin + offset * Vector3.back, Vector3.down, _groundCheckDistance) ||
+			   Physics.Raycast(origin + offset * Vector3.left, Vector3.down, _groundCheckDistance);
+	}
+
+	private void OnLand()
+	{
+		_canJump = true;
+		_animator.SetBool("Grounded", true);
+		_lastLandTime = Time.time;
+	}
+
+	private void InTheAir()
+	{
+		_canJump = false;
+		_animator.SetBool("Grounded", false);
+	}
+
+	// ---------------------------------------------
+	// Físicas del suelo
+	// ---------------------------------------------
+
+	public void AlterPhysics(Floor.FloorType floor)
+	{
+		switch (floor)
 		{
-			_canJump = true;
-			_animator.SetBool("Grounded", true);
-			if (!_firstTimeJumping)
-				_lastLandTime = Time.time;
-			else
-				_firstTimeJumping = false;
+			case Floor.FloorType.Slippery:
+				_onIce = true;
+				break;
+
+			case Floor.FloorType.Sticky:
+				_moveSpeed = _defaultMoveSpeed * 0.6f;
+				_jumpForce = _defaultJumpForce * 0.6f;
+				break;
+
+			case Floor.FloorType.Trampoline:
+				_boostJump = true;
+				break;
+
+			// Reset values
+			default:
+				ResetPhysics();
+				break;
 		}
 	}
 
-	private void OnCollisionExit(Collision collision)
+	private void ResetPhysics()
 	{
-		if (collision.gameObject.CompareTag("Ground") && _canJump)
+		_moveSpeed = _defaultMoveSpeed;
+		_jumpForce = _defaultJumpForce;
+		_boostJump = false;
+		_onIce = false;
+
+		// Parar aceleración en saltos sobre hielo
+		if (!_acceleratedIceJump)
 		{
-			_canJump = false;
-			_animator.SetTrigger("Fall");
-			_animator.SetBool("Grounded", false);
+			_rb.velocity = new Vector3(0f, _rb.velocity.y, 0f);
+			_rb.angularVelocity = Vector3.zero;
+		}
+	}
+
+	private void CheckBoostJump()
+	{
+		if (_boostJump)
+		{
+			_rb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+			_boostJump = false;
 		}
 	}
 }

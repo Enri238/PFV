@@ -491,7 +491,7 @@ GameObject:
   - component: {fileID: 6451380570114619555}
   m_Layer: 0
   m_Name: SantaClaus
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -571,9 +571,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _smoothing: 0.06
   _runningSmoothing: 0.08
-  _moveSpeed: 5
-  _jumpForce: 5
+  _defaultMoveSpeed: 5
+  _defaultJumpForce: 5
   _jumpCooldown: 0.5
+  _groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!54 &6451380570114619555
 Rigidbody:
   m_ObjectHideFlags: 0
