@@ -14,6 +14,8 @@ public class SantaController : MonoBehaviour
 	[SerializeField] private float _groundCheckDistance = 0.3f;
 	[SerializeField] private bool _acceleratedIceJump;
 	[SerializeField] private float _restartHeight;
+	[SerializeField] private AudioSource _jumpAS;
+	[SerializeField] private AudioSource _boingAS;
 
 	private Animator _animator;
 	private Rigidbody _rb;
@@ -168,6 +170,10 @@ public class SantaController : MonoBehaviour
 			_animator.SetTrigger("Jump");
 			_animator.SetBool("Grounded", false);
 			_jump = false;
+
+			if (_jumpAS.isPlaying)
+				_jumpAS.Stop();
+			_jumpAS.Play();
 		}
 	}
 
@@ -260,6 +266,10 @@ public class SantaController : MonoBehaviour
 		{
 			_rb.AddForce(_jumpForce * 2.5f * Vector3.up, ForceMode.Impulse);
 			_boostJump = false;
+
+			if (_boingAS.isPlaying)
+				_boingAS.Stop();
+			_boingAS.Play();
 		}
 	}
 
