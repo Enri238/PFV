@@ -8,6 +8,12 @@ public class GameManager : MonoBehaviour
     [Header("Opcional: Música persistente")]
     public AudioSource musicaFondo;
 
+    [Header("UI de Pausa")]
+    [Tooltip("Panel que contiene el menú de pausa (GameObject con Canvas)")]
+    public GameObject pauseMenuUI;
+
+    private bool isPaused = false;
+
     void Awake()
     {
         // Singleton: asegura que solo haya uno
@@ -20,6 +26,54 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject); // persiste entre escenas
     }
+
+    void Update()
+    {
+        // Si no estamos en la escena inicial (índice 0) y pulsamos Escape
+        int idx = SceneManager.GetActiveScene().buildIndex;
+        if (idx != 0 && Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isPaused)
+                Reanudar();
+            else
+                Pausar();
+        }
+    }
+
+    /// <summary>
+    /// Congela el juego y muestra el menú de pausa.
+    /// </summary>
+    private void Pausar()
+    {
+        Time.timeScale = 0f;
+        isPaused = true;
+        if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
+    }
+
+    /// <summary>
+    /// Vuelve al estado de juego normal desde pausa.
+    /// </summary>
+    public void Reanudar()
+    {
+        Time.timeScale = 1f;
+        isPaused = false;
+        if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
+    }
+
+    /// <summary>
+    /// Carga la escena de menú principal (índice 0) y restaura el tiempo.
+    /// </summary>
+    public void MenuPrincipal()
+    {
+    // Asegurarnos de restaurar el tiempo y ocultar el menú de pausa
+    Time.timeScale = 1f;
+    isPaused = false;
+    if (pauseMenuUI != null)
+        pauseMenuUI.SetActive(false);
+
+    // Cargar la escena principal (índice 0)
+    SceneManager.LoadScene(0);
+}
 
     // Cargar por índice (escena siguiente)
     public void CargarSiguienteEscena()

@@ -1837,6 +1837,7 @@ GameObject:
   - component: {fileID: 802549074}
   - component: {fileID: 802549073}
   - component: {fileID: 802549072}
+  - component: {fileID: 802549075}
   m_Layer: 0
   m_Name: Normal (7)
   m_TagString: Untagged
@@ -1930,6 +1931,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 802549070}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &802549075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 802549070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85270c1a53dc534d87f64e3463c1236, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTag: Player
 --- !u!1 &812843415
 GameObject:
   m_ObjectHideFlags: 0

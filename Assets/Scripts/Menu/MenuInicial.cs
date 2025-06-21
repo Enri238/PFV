@@ -44,6 +44,7 @@ public class MenuInicial : MonoBehaviour
 
     public void Jugar()
     {
+        Debug.Log("Cargando siguiente escena..." + SceneManager.GetActiveScene().buildIndex);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
