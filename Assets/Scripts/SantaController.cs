@@ -210,7 +210,7 @@ public class SantaController : MonoBehaviour
 	}
 
 	// ---------------------------------------------
-	// Físicas del suelo
+	// Fï¿½sicas del suelo
 	// ---------------------------------------------
 
 	public void AlterPhysics(Floor.FloorType floor)
@@ -246,7 +246,7 @@ public class SantaController : MonoBehaviour
 		_boostJump = false;
 		_onIce = false;
 
-		// Parar aceleración en saltos sobre hielo
+		// Parar aceleraciï¿½n en saltos sobre hielo
 		if (!_acceleratedIceJump)
 		{
 			_rb.velocity = new Vector3(0f, _rb.velocity.y, 0f);
