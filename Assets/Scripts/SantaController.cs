@@ -16,6 +16,9 @@ public class SantaController : MonoBehaviour
 	[SerializeField] private float _restartHeight;
 	[SerializeField] private AudioSource _jumpAS;
 	[SerializeField] private AudioSource _boingAS;
+	[SerializeField] private AudioSource _footstepsAS;
+	[SerializeField] private AudioSource _iceStepsAS;
+	[SerializeField] private AudioSource _stickyStepsAS;
 
 	private Animator _animator;
 	private Rigidbody _rb;
@@ -31,6 +34,8 @@ public class SantaController : MonoBehaviour
 	private bool _jump = false;
 	private bool _boostJump = false;
 	private bool _onIce = false;
+	private bool _onSticky = false;
+	private bool _playingFootsteps = false;
 
 	private float _lastLandTime = -Mathf.Infinity;
 	private float _moveSpeed, _jumpForce;
@@ -125,12 +130,30 @@ public class SantaController : MonoBehaviour
 
 	private void HandleMovement(bool isRunning, Vector3 moveDirection)
 	{
-		if (moveDirection.magnitude < 0.01f) return;
+		if (moveDirection.magnitude < 0.01f)
+		{
+			_playingFootsteps = false;
+			CancelInvoke(nameof(PlayFootsteps));
+			return;
+		}
 
+		if (!_canJump)
+		{
+			_playingFootsteps = false;
+			CancelInvoke(nameof(PlayFootsteps));
+		}
+		
 		float speedMultiplier = isRunning ? 1f : 0.5f;
 		Vector3 velocity = _moveSpeed * speedMultiplier * moveDirection.normalized;
 
 		_rb.MovePosition(_rb.position + velocity * Time.fixedDeltaTime);
+
+		if (!_playingFootsteps)
+		{
+			_playingFootsteps = true;
+			float pace = isRunning ? 0.3f : 0.4f;
+			Invoke(nameof(PlayFootsteps), pace);
+		}
 	}
 
 	private void ApplySmoothRotation(Vector3 moveDirection)
@@ -144,11 +167,31 @@ public class SantaController : MonoBehaviour
 	
 	private void ApplyIceForces(bool isRunning, Vector3 moveDirection)
 	{
+		if (moveDirection.magnitude < 0.01f)
+		{
+			_playingFootsteps = false;
+			CancelInvoke(nameof(PlayFootsteps));
+			return;
+		}
+
+		if (!_canJump)
+		{
+			_playingFootsteps = false;
+			CancelInvoke(nameof(PlayFootsteps));
+		}
+
 		float forceMultiplier = isRunning ? 1f : 0.5f;
 		float forceAmount = forceMultiplier * 10f * Time.fixedDeltaTime;
 
 		if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
 			_rb.AddForce(forceAmount * moveDirection, ForceMode.VelocityChange);
+
+		if (!_playingFootsteps)
+		{
+			_playingFootsteps = true;
+			float pace = isRunning ? 0.3f : 0.4f;
+			Invoke(nameof(PlayFootsteps), pace);
+		}
 	}
 
 	// ---------------------------------------------
@@ -228,6 +271,7 @@ public class SantaController : MonoBehaviour
 				break;
 
 			case Floor.FloorType.Sticky:
+				_onSticky = true;
 				_jumpCooldown = 0.5f;
 				_moveSpeed = _defaultMoveSpeed * 0.6f;
 				_jumpForce = _defaultJumpForce * 0.6f;
@@ -251,6 +295,7 @@ public class SantaController : MonoBehaviour
 		_jumpForce = _defaultJumpForce;
 		_boostJump = false;
 		_onIce = false;
+		_onSticky = false;
 
 		// Parar aceleraci�n en saltos sobre hielo
 		if (!_acceleratedIceJump)
@@ -281,5 +326,39 @@ public class SantaController : MonoBehaviour
 	{
 		if (transform.position.y < _restartHeight)
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+	}
+
+	// ---------------------------------------------
+	// Sonido de pasos
+	// ---------------------------------------------
+
+	public void PlayFootsteps()
+	{
+		bool isRunning = IsRunning();
+		float pace = isRunning ? 0.3f : 0.4f;
+
+		if (_onIce)
+		{
+			if (_iceStepsAS.isPlaying)
+				_iceStepsAS.Stop();
+			// Debug.Log("Playing ice steps soundat a pace of " + pace);
+			_iceStepsAS.Play();
+		}
+		else if (_onSticky)
+		{
+			if (_stickyStepsAS.isPlaying)
+				_stickyStepsAS.Stop();
+			// Debug.Log("Playing sticky steps sound at a pace of " + pace);
+			_stickyStepsAS.Play();
+		}
+		else
+		{
+			if (_footstepsAS.isPlaying)
+				_footstepsAS.Stop();
+			// Debug.Log("Playing normal steps sound at a pace of " + pace);
+			_footstepsAS.Play();
+		}
+
+		Invoke(nameof(PlayFootsteps), pace);
 	}
 }
