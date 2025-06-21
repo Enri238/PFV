@@ -1263,37 +1263,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: SantaClaus (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 784052080468965811, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5058378721823162946, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
       propertyPath: _restartHeight
       value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5058378721823162946, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
-      propertyPath: _defaultJumpForce
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5058378721823162946, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
-      propertyPath: _defaultMoveSpeed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6451380570114619555, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
-      propertyPath: m_Mass
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8575705848801196052, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8575705848801196052, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8575705848801196052, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8575705848801196052, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
       propertyPath: m_LocalPosition.x
