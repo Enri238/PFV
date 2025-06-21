@@ -8,7 +8,7 @@ public class CameraFollower : MonoBehaviour
     #region Variables
     public Transform target;
 
-    private float offset;
+    private Vector3 offset;
     #endregion
 
     #region Unity Methods    
@@ -16,13 +16,13 @@ public class CameraFollower : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        offset = target.position.z - transform.position.z;
+        offset = target.position - transform.position;
 	}
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(transform.position.x, transform.position.y, target.position.z - offset);
+        transform.position = new Vector3(target.position.x - offset.x, target.position.y - offset.y, target.position.z - offset.z);
     }
 
     #endregion

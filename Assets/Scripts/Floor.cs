@@ -38,29 +38,22 @@ public class Floor : MonoBehaviour
 		if (collision.gameObject.CompareTag("Player"))
 		{
 			SantaController santaController = collision.gameObject.GetComponent<SantaController>();
-			SantaControllerv2 santaControllerv2 = collision.gameObject.GetComponent<SantaControllerv2>();
 			
 			switch (floorType)
             {
 				case FloorType.Slippery:
 					if (santaController)
 						santaController.AlterPhysics(FloorType.Slippery);
-					else if (santaControllerv2)
-						santaControllerv2.AlterPhysics(FloorType.Slippery);
 					break;
 
 				case FloorType.Sticky:
 					if (santaController)
 						santaController.AlterPhysics(FloorType.Sticky);
-					else if (santaControllerv2)
-						santaControllerv2.AlterPhysics(FloorType.Sticky);
 					break;
 
 				case FloorType.Trampoline:
 					if (santaController)
 						santaController.AlterPhysics(FloorType.Trampoline);
-					else if (santaControllerv2)
-						santaControllerv2.AlterPhysics(FloorType.Trampoline);
 					break;
 
 				case FloorType.Disappearing:
@@ -70,8 +63,6 @@ public class Floor : MonoBehaviour
 				default:
 					if (santaController)
 						santaController.AlterPhysics(FloorType.Normal);
-					else if (santaControllerv2)
-						santaControllerv2.AlterPhysics(FloorType.Normal);
 					break;
 			}
 		}
@@ -82,12 +73,9 @@ public class Floor : MonoBehaviour
 		if (collision.gameObject.CompareTag("Player"))
 		{
 			SantaController santaController = collision.gameObject.GetComponent<SantaController>();
-			SantaControllerv2 santaControllerv2 = collision.gameObject.GetComponent<SantaControllerv2>();
 			
 			if (santaController)
 				santaController.AlterPhysics(FloorType.Normal);
-			else if (santaControllerv2)
-				santaControllerv2.AlterPhysics(FloorType.Normal);
 		}
 	}
 
