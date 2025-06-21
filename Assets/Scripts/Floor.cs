@@ -57,7 +57,8 @@ public class Floor : MonoBehaviour
 					break;
 
 				case FloorType.Disappearing:
-					Destroy(gameObject, destroyTime);
+					Invoke(nameof(HidePlatform), destroyTime);
+					Invoke(nameof(ShowPlatform), 5f);
 					break;
 
 				default:
@@ -77,6 +78,16 @@ public class Floor : MonoBehaviour
 			if (santaController)
 				santaController.AlterPhysics(FloorType.Normal);
 		}
+	}
+
+	private void HidePlatform()
+	{
+		gameObject.SetActive(false);
+	}
+
+	private void ShowPlatform()
+	{
+		gameObject.SetActive(true);
 	}
 
 	#endregion

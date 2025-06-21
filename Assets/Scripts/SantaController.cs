@@ -19,6 +19,7 @@ public class SantaController : MonoBehaviour
 	[SerializeField] private AudioSource _footstepsAS;
 	[SerializeField] private AudioSource _iceStepsAS;
 	[SerializeField] private AudioSource _stickyStepsAS;
+	[SerializeField] private Transform _start;
 
 	private Animator _animator;
 	private Rigidbody _rb;
@@ -325,7 +326,7 @@ public class SantaController : MonoBehaviour
 	public void CheckRestart()
 	{
 		if (transform.position.y < _restartHeight)
-			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+			transform.position = _start.position;
 	}
 
 	// ---------------------------------------------
