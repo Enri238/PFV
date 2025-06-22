@@ -36,6 +36,8 @@ public class LevelFinish : MonoBehaviour
                     recordText.text = timerManager.IsNewRecord() ? "¡Nuevo récord!" : "Récord: " + timerManager.GetRecordString();
 					victoryCanvas.SetActive(true);
 				}
+
+                timerManager.SavePersonalBest();
 			}
 		}
     }

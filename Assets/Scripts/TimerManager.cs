@@ -66,7 +66,6 @@ public class TimerManager : MonoBehaviour
 	public void StopTimer()
 	{
 		isRunning = false;
-		SavePersonalBest();
 		timerCanvas.SetActive(false);
 	}
 
