@@ -2268,10 +2268,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: SantaClaus
       objectReference: {fileID: 0}
+    - target: {fileID: 2707274721672424813, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: fc5159a4067b3b74f9fce5780ea8091a, type: 2}
     - target: {fileID: 5058378721823162946, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
       propertyPath: _start
       value: 
       objectReference: {fileID: 885297758}
+    - target: {fileID: 5775999805338025374, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: fc5159a4067b3b74f9fce5780ea8091a, type: 2}
+    - target: {fileID: 5927814456742281212, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: fc5159a4067b3b74f9fce5780ea8091a, type: 2}
+    - target: {fileID: 6403700361131780004, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: fc5159a4067b3b74f9fce5780ea8091a, type: 2}
+    - target: {fileID: 7950150861917579373, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: fc5159a4067b3b74f9fce5780ea8091a, type: 2}
     - target: {fileID: 8575705848801196052, guid: 69bc0b9378814324ba29a436e631a3c8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -69.3
@@ -5523,7 +5543,7 @@ AudioSource:
   m_GameObject: {fileID: 1832021523}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: fc5159a4067b3b74f9fce5780ea8091a, type: 2}
   m_audioClip: {fileID: 8300000, guid: 64acf998f34ad0441b9eda8dac8ff47d, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.09
