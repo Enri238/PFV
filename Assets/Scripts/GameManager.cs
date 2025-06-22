@@ -74,8 +74,9 @@ public class GameManager : MonoBehaviour
         if (pauseMenuUI != null)
             pauseMenuUI.SetActive(false);
 
-        // Cargar la escena principal (índice 0)
-        SceneManager.LoadScene(0);
+        timerManager.StopTimer();
+		// Cargar la escena principal (índice 0)
+		SceneManager.LoadScene(0);
     }
 
     // Cargar por índice (escena siguiente)
