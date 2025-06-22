@@ -8,10 +8,15 @@ public class MenuInicial : MonoBehaviour
     [Header("Referencias")]
     public GameObject menuPrincipal;
     public GameObject menuControles;
+    public GameObject menuOpciones;          // NUEVO
     public RectTransform botonesContainer;
 
-    public RectTransform textoControles;   // NUEVO
-    public RectTransform botonVolver;      // NUEVO
+    public RectTransform textoControles;
+    public RectTransform botonVolver;
+
+    public RectTransform textoOpciones;      // NUEVO
+    public RectTransform botonOpcionesVolver;// NUEVO
+    public RectTransform sliderOpciones;     // NUEVO
 
     [Header("Animación")]
     public float tiempoEntreCaidas = 0.05f;
@@ -21,21 +26,35 @@ public class MenuInicial : MonoBehaviour
     private Vector2[] posicionesOriginales;
     private Vector2 posOriginalTexto;
     private Vector2 posOriginalBoton;
+    private Vector2 posOriginalTextoOpciones;    // NUEVO
+    private Vector2 posOriginalBotonOpciones;    // NUEVO
+    private Vector2 posOriginalSliderOpciones;   // NUEVO
 
     private GameManager _gameManager;
 
     void Start()
     {
         GuardarPosicionesOriginales();
+
         posOriginalTexto = textoControles.anchoredPosition;
         posOriginalBoton = botonVolver.anchoredPosition;
 
+        posOriginalTextoOpciones = textoOpciones.anchoredPosition;     // NUEVO
+        posOriginalBotonOpciones = botonOpcionesVolver.anchoredPosition; // NUEVO
+        posOriginalSliderOpciones = sliderOpciones.anchoredPosition;     // NUEVO
+
+        // Ocultar menús secundarios al inicio
         textoControles.gameObject.SetActive(false);
         botonVolver.gameObject.SetActive(false);
         menuControles.SetActive(false);
 
+        textoOpciones.gameObject.SetActive(false);       // NUEVO
+        botonOpcionesVolver.gameObject.SetActive(false); // NUEVO
+        sliderOpciones.gameObject.SetActive(false);      // NUEVO
+        menuOpciones.SetActive(false);                   // NUEVO
+
         _gameManager = FindObjectOfType<GameManager>();
-	}
+    }
 
     void GuardarPosicionesOriginales()
     {
@@ -50,7 +69,7 @@ public class MenuInicial : MonoBehaviour
     {
         Debug.Log("Cargando siguiente escena..." + SceneManager.GetActiveScene().buildIndex);
         _gameManager.CargarSiguienteEscena();
-	}
+    }
 
     public void Salir()
     {
@@ -72,7 +91,7 @@ public class MenuInicial : MonoBehaviour
             botonVolver.gameObject.SetActive(true);
 
             StartCoroutine(Deslizar(textoControles, posOriginalTexto, duracionCaida));
-            StartCoroutine(Deslizar(botonVolver, posOriginalBoton, duracionCaida));
+            StartCoroutine(Deslizar(botonVolver,    posOriginalBoton,    duracionCaida));
         }));
     }
 
@@ -88,11 +107,51 @@ public class MenuInicial : MonoBehaviour
             StartCoroutine(AnimarSubida(botonesContainer));
         }));
     }
-    //función para cargar la escena de créditos (la última en Build Settings)
+
+    // NUEVO: Mostrar Opciones
+    public void MostrarOpciones()
+    {
+        StartCoroutine(AnimarCaida(botonesContainer, () =>
+        {
+            Debug.Log("Mostrando opciones...");
+            botonesContainer.gameObject.SetActive(false);
+            menuOpciones.SetActive(true);
+
+            textoOpciones.anchoredPosition      = posOriginalTextoOpciones + Vector2.down * distanciaCaida;
+            botonOpcionesVolver.anchoredPosition = posOriginalBotonOpciones + Vector2.down * distanciaCaida;
+            sliderOpciones.anchoredPosition      = posOriginalSliderOpciones + Vector2.down * distanciaCaida;
+
+            textoOpciones.gameObject.SetActive(true);
+            botonOpcionesVolver.gameObject.SetActive(true);
+            sliderOpciones.gameObject.SetActive(true);
+
+            StartCoroutine(Deslizar(textoOpciones,      posOriginalTextoOpciones,    duracionCaida));
+            StartCoroutine(Deslizar(botonOpcionesVolver, posOriginalBotonOpciones,    duracionCaida));
+            StartCoroutine(Deslizar(sliderOpciones,      posOriginalSliderOpciones,   duracionCaida));
+        }));
+    }
+
+    // NUEVO: Volver desde Opciones
+    public void VolverDeOpciones()
+    {
+        Debug.Log("Volviendo al menú principal desde opciones...");
+        StartCoroutine(Deslizar(textoOpciones, textoOpciones.anchoredPosition + Vector2.down * distanciaCaida, duracionCaida));
+        StartCoroutine(Deslizar(botonOpcionesVolver, botonOpcionesVolver.anchoredPosition + Vector2.down * distanciaCaida, duracionCaida));
+        StartCoroutine(Deslizar(sliderOpciones, sliderOpciones.anchoredPosition + Vector2.down * distanciaCaida, duracionCaida, () =>
+        {
+            textoOpciones.gameObject.SetActive(false);
+            botonOpcionesVolver.gameObject.SetActive(false);
+            sliderOpciones.gameObject.SetActive(false);
+            menuOpciones.SetActive(false);
+            botonesContainer.gameObject.SetActive(true);
+            StartCoroutine(AnimarSubida(botonesContainer));
+        }));
+    }
+
     public void MostrarCreditos()
     {
         int totalScenes     = SceneManager.sceneCountInBuildSettings;
-        int creditSceneIdx  = totalScenes - 1;                 // índice de la última escena
+        int creditSceneIdx  = totalScenes - 1;
         Debug.Log("Cargando créditos (escena " + creditSceneIdx + ")");
         SceneManager.LoadScene(creditSceneIdx);
     }
