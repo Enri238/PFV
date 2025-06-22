@@ -15,7 +15,9 @@ public class GameManager : MonoBehaviour
 	[Header("Temporizador")]
     public TimerManager timerManager;
 
-	private bool isPaused = false;
+
+
+    private bool isPaused = false;
 
     void Awake()
     {
@@ -34,7 +36,7 @@ public class GameManager : MonoBehaviour
     {
         // Si no estamos en la escena inicial (índice 0) y pulsamos Escape
         int idx = SceneManager.GetActiveScene().buildIndex;
-        if (idx != 0 && Input.GetKeyDown(KeyCode.Escape))
+        if (idx != 0 && Input.GetKeyDown(KeyCode.Escape) && idx != SceneManager.sceneCountInBuildSettings)
         {
             if (isPaused)
                 Reanudar();
@@ -83,7 +85,9 @@ public class GameManager : MonoBehaviour
     {
 		int totalScenes = SceneManager.sceneCountInBuildSettings;
 		int nextSceneIdx = (SceneManager.GetActiveScene().buildIndex + 1) % totalScenes;
-        
+        if (nextSceneIdx == 3)
+            nextSceneIdx =3;
+
         if (nextSceneIdx == 0)
             timerManager.StopTimer();
         else if (nextSceneIdx == 1)

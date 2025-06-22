@@ -88,6 +88,14 @@ public class MenuInicial : MonoBehaviour
             StartCoroutine(AnimarSubida(botonesContainer));
         }));
     }
+    //función para cargar la escena de créditos (la última en Build Settings)
+    public void MostrarCreditos()
+    {
+        int totalScenes     = SceneManager.sceneCountInBuildSettings;
+        int creditSceneIdx  = totalScenes - 1;                 // índice de la última escena
+        Debug.Log("Cargando créditos (escena " + creditSceneIdx + ")");
+        SceneManager.LoadScene(creditSceneIdx);
+    }
 
     IEnumerator AnimarCaida(RectTransform contenedor, System.Action alFinalizar)
     {

@@ -70,6 +70,14 @@ public class TimerManager : MonoBehaviour
 		timerCanvas.SetActive(false);
 	}
 
+	 /* ---------- NUEVO ---------- */
+    /// <summary>Pausa sin resetear el contador.</summary>
+    public void PauseTimer()   => isRunning = false;
+
+    /// <summary>Reanuda desde el tiempo acumulado.</summary>
+    public void ResumeTimer()  => isRunning = true;
+    /* --------------------------- */
+
 	private void ShowPersonalBest()
 	{
 		float pb = GetPersonalBest();
