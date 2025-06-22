@@ -84,10 +84,10 @@ public class GameManager : MonoBehaviour
 		int totalScenes = SceneManager.sceneCountInBuildSettings;
 		int nextSceneIdx = (SceneManager.GetActiveScene().buildIndex + 1) % totalScenes;
         
-        if (nextSceneIdx != 0)
-            timerManager.StartTimer();
-        else
-			timerManager.StopTimer();
+        if (nextSceneIdx == 0)
+            timerManager.StopTimer();
+        else if (nextSceneIdx == 1)
+			timerManager.StartTimer();
 
 		SceneManager.LoadScene(nextSceneIdx);
     }

@@ -8,7 +8,9 @@ public class TimerManager : MonoBehaviour
 {
 
 	#region Variables
+	public GameObject timerCanvas;
 	public TextMeshProUGUI timer;
+	public TextMeshProUGUI personalBest;
 
 	private float seconds;
 	private bool isRunning;
@@ -21,7 +23,7 @@ public class TimerManager : MonoBehaviour
     {
 		seconds = 0f;
 		isRunning = false;
-    }
+	}
 
     // Update is called once per frame
     void Update()
@@ -56,11 +58,22 @@ public class TimerManager : MonoBehaviour
 	public void StartTimer()
 	{
 		isRunning = true;
+		seconds = 0f;
+		ShowPersonalBest();
+		timerCanvas.SetActive(true);
 	}
 
 	public void StopTimer()
 	{
 		isRunning = false;
+		SavePersonalBest();
+		timerCanvas.SetActive(false);
+	}
+
+	private void ShowPersonalBest()
+	{
+		float pb = GetPersonalBest();
+		personalBest.SetText(pb == 0 ? "--:--:---" : FormatTimeMilliseconds(pb));
 	}
 
 	#endregion

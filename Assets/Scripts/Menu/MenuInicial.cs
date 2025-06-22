@@ -22,6 +22,8 @@ public class MenuInicial : MonoBehaviour
     private Vector2 posOriginalTexto;
     private Vector2 posOriginalBoton;
 
+    private GameManager _gameManager;
+
     void Start()
     {
         GuardarPosicionesOriginales();
@@ -31,7 +33,9 @@ public class MenuInicial : MonoBehaviour
         textoControles.gameObject.SetActive(false);
         botonVolver.gameObject.SetActive(false);
         menuControles.SetActive(false);
-    }
+
+        _gameManager = FindObjectOfType<GameManager>();
+	}
 
     void GuardarPosicionesOriginales()
     {
@@ -45,8 +49,8 @@ public class MenuInicial : MonoBehaviour
     public void Jugar()
     {
         Debug.Log("Cargando siguiente escena..." + SceneManager.GetActiveScene().buildIndex);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
+        _gameManager.CargarSiguienteEscena();
+	}
 
     public void Salir()
     {
