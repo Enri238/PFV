@@ -326,7 +326,12 @@ public class SantaController : MonoBehaviour
 	public void CheckRestart()
 	{
 		if (transform.position.y < _restartHeight)
-			transform.position = _start.position;
+			Restart();
+	}
+
+	public void Restart()
+	{
+		transform.position = _start.position;
 	}
 
 	// ---------------------------------------------
