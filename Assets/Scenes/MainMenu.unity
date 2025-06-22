@@ -1778,6 +1778,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
+  victoryCanvas: {fileID: 0}
+  timeText: {fileID: 0}
+  recordText: {fileID: 0}
 --- !u!114 &1017182884
 MonoBehaviour:
   m_ObjectHideFlags: 0

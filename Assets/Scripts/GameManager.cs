@@ -15,8 +15,6 @@ public class GameManager : MonoBehaviour
 	[Header("Temporizador")]
     public TimerManager timerManager;
 
-
-
     private bool isPaused = false;
 
     void Awake()
@@ -85,12 +83,10 @@ public class GameManager : MonoBehaviour
     {
 		int totalScenes = SceneManager.sceneCountInBuildSettings;
 		int nextSceneIdx = (SceneManager.GetActiveScene().buildIndex + 1) % totalScenes;
-        if (nextSceneIdx == 3)
-            nextSceneIdx =3;
+        
+        if (nextSceneIdx == 3) nextSceneIdx = 0;
 
-        if (nextSceneIdx == 0)
-            timerManager.StopTimer();
-        else if (nextSceneIdx == 1)
+        if (nextSceneIdx == 1)
 			timerManager.StartTimer();
 
 		SceneManager.LoadScene(nextSceneIdx);
@@ -114,4 +110,9 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    public bool EsUltimoNivel()
+	{
+		return SceneManager.GetActiveScene().buildIndex == SceneManager.sceneCountInBuildSettings - 2;
+	}
 }

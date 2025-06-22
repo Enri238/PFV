@@ -84,5 +84,22 @@ public class TimerManager : MonoBehaviour
 		personalBest.SetText(pb == 0 ? "--:--:---" : FormatTimeMilliseconds(pb));
 	}
 
+	public string GetTimeString()
+	{
+		return FormatTimeMilliseconds(seconds);
+	}
+
+	public bool IsNewRecord()
+	{
+		float pb = GetPersonalBest();
+		return pb == 0f || seconds < pb;
+	}
+
+	public string GetRecordString()
+	{
+		float pb = GetPersonalBest();
+		return pb == 0f ? "--:--:---" : FormatTimeMilliseconds(pb);
+	}
+
 	#endregion
 }

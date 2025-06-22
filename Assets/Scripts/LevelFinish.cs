@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,7 +7,12 @@ public class LevelFinish : MonoBehaviour
     [Header("Etiqueta del jugador")]
     public string playerTag = "Player";
 
-    private GameManager _gameManager;
+	[Header("Canvas de victoria")]
+    public GameObject victoryCanvas;
+    public TextMeshProUGUI timeText;
+    public TextMeshProUGUI recordText;
+
+	private GameManager _gameManager;
 
 	void Awake()
 	{
@@ -17,8 +23,26 @@ public class LevelFinish : MonoBehaviour
     {
         if (other.CompareTag(playerTag))
         {
-            _gameManager.CargarSiguienteEscena();
+            if (!_gameManager.EsUltimoNivel())
+                _gameManager.CargarSiguienteEscena();
+            else
+            {
+                TimerManager timerManager = _gameManager.timerManager;
+				timerManager.StopTimer();
+				
+                if (victoryCanvas)
+                {
+					timeText.text = timerManager.GetTimeString();
+                    recordText.text = timerManager.IsNewRecord() ? "¡Nuevo récord!" : "Récord: " + timerManager.GetRecordString();
+					victoryCanvas.SetActive(true);
+				}
+			}
 		}
+    }
+
+    public void SiguienteEscena()
+    {
+        _gameManager.CargarSiguienteEscena();
     }
 
     //private void CargarSiguienteConWrap()
