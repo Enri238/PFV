@@ -12,7 +12,10 @@ public class GameManager : MonoBehaviour
     [Tooltip("Panel que contiene el menú de pausa (GameObject con Canvas)")]
     public GameObject pauseMenuUI;
 
-    private bool isPaused = false;
+	[Header("Temporizador")]
+    public TimerManager timerManager;
+
+	private bool isPaused = false;
 
     void Awake()
     {
@@ -65,20 +68,28 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void MenuPrincipal()
     {
-    // Asegurarnos de restaurar el tiempo y ocultar el menú de pausa
-    Time.timeScale = 1f;
-    isPaused = false;
-    if (pauseMenuUI != null)
-        pauseMenuUI.SetActive(false);
+        // Asegurarnos de restaurar el tiempo y ocultar el menú de pausa
+        Time.timeScale = 1f;
+        isPaused = false;
+        if (pauseMenuUI != null)
+            pauseMenuUI.SetActive(false);
 
-    // Cargar la escena principal (índice 0)
-    SceneManager.LoadScene(0);
-}
+        // Cargar la escena principal (índice 0)
+        SceneManager.LoadScene(0);
+    }
 
     // Cargar por índice (escena siguiente)
     public void CargarSiguienteEscena()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+		int totalScenes = SceneManager.sceneCountInBuildSettings;
+		int nextSceneIdx = (SceneManager.GetActiveScene().buildIndex + 1) % totalScenes;
+        
+        if (nextSceneIdx != 0)
+            timerManager.StartTimer();
+        else
+			timerManager.StopTimer();
+
+		SceneManager.LoadScene(nextSceneIdx);
     }
 
     // Cargar por nombre
